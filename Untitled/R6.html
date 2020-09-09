@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Advanced R Book Club: Chapter 14</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Johanna Munoz" />
+    <meta name="date" content="2020-09-09" />
+    <link href="libs/remark-css/kunoichi.css" rel="stylesheet" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/ninpo.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Advanced R Book Club: Chapter 14
+## R Ladies NL
+### Johanna Munoz
+### 2020-09-09
+
+---
+
+
+
+
+
+
+
+
+## Welcome!
+
+This is part 1 of the R Ladies Netherlands bookclub. 
+
+We're reading Advanced R by Hadley Wickham.
+
+https://adv-r.hadley.nz/
+
+
+--
+
+## The Plan
+We will work through all of Advanced R together!
+
+You can find all materials on Github:
+https://github.com/rladiesnl/book_club
+
+We are going to rotate through every 2 weeks, with an event hosted by each of the NL RLadies chapters involved.
+---
+class: bg-main1 split-30 hide-slide-number
+
+.column.bg-main3[
+]
+.column.slide-in-right[
+.sliderbox.bg-main2.vmiddle[
+.font5[R6]
+]]
+---
+class: split-two white
+
+.column.bg-white[.content[
+&lt;img src="img/dog.png" width="100%"&gt;
+
+]]
+
+.column.bg-main1[.content[.font2[### Object- Oriented Programming (OPP)]
+.font1[
+- ### Small number of well understood objects.
+- ### God for building tools instead to analysing data.
+- ### Functions behaves differently depends on the object.
+]
+
+--
+.font2[### There are different package for OPP]
+.font1[
+- ### S3: Simple system good to start.
+- ### S4: Bioconductor (encapsulation,inheretants).
+- ### ReferenceClasses (RC).
+- ### R6: Kind of RC but simple way.]
+]
+
+]
+
+
+
+---
+
+
+
+
+
+
+### R6
+We keep working on the OOP (Object-Oriented Programming)
+We have talked about S3 and S4, but today we will talk about R6.
+
+object -&gt; class-&gt; method
+object -&gt; what describe the object-&gt;functionality
+
+object: 20 types (logical vector,integer vector , list, environment) 
+
+---
+### When to used OOP
+
+Small number of objects well understanding objects
+Graphical user interphases
+-God for building tools instead analyzing data (functional programming)
+-Functions can behave differntly for different kind of objects.
+
+---
+###There are different package for OPP
+There have been created 9 packages but now
+-S3: Simple system good to start.
+-S4: Bioconductor (encapsulation,inheretants).
+-ReferenceClasses
+-R6: Kind of RC but simple way
+
+---
+### Distinguish Variables
+class(matrix) "matrix"
+typeof(matrix) "float"
+
+mode()
+storage.mode()
+
+override the class but not typeof()
+class(X)&lt;-"gato"
+---
+### Summary
+function overloading= input dependent function behaviour
+having different behaviours of function depending on the object
+---
+### S3
+function split in generic and method
+methods are named generic.class
+print.Date
+method signatures contain generaric signature
+functin(x,...) elipsis argument
+
+---
+### Method
+methods(class="glm") S3 and S4
+.S3mehtods(class="glm")
+
+---
+### Encapsulation
+separation
+separating implementton fromuser interfase
+
+apple_factory&lt;- R6class{
+  "iphonex",
+  
+  store data implementation
+  private=list(
+           capacity=64GB
+           block_status=TRUE
+  ),
+  store methods ui
+  public=list(
+     unblock_cell=function{
+     private$block_status=FALSE
+     }
+            
+  )
+  
+  private$ to access private elemnents
+  ... and self$ to access public
+}
+
+
+### Examples
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
