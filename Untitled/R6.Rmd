@@ -6,7 +6,7 @@ date: "`r Sys.Date()`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
-    css: ["kunoichi","ninjutsu","assets/ninpo.css"]
+    css: ["kunoichi","ninjutsu","rladies-fonts"]
     self_contained: false
     nature:
       ratio: "16:9"
@@ -14,7 +14,18 @@ output:
       highlightLines: true
       countIncrementalSlides: false
 ---
+<style type="text/css">
 
+body, td {
+   font-size: 14px;
+}
+code.r{
+  font-size: 16px;
+}
+pre {
+  font-size: 12px
+}
+</style>
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
@@ -37,13 +48,14 @@ mono_accent(
 
 ## Welcome!
 
-This is part 1 of the R Ladies Netherlands bookclub. 
+This is chapter 14 of the R Ladies Netherlands bookclub. 
 
 We're reading Advanced R by Hadley Wickham.
 
 https://adv-r.hadley.nz/
 
-
+<br>
+<br>
 --
 
 ## The Plan
@@ -54,125 +66,346 @@ https://github.com/rladiesnl/book_club
 
 We are going to rotate through every 2 weeks, with an event hosted by each of the NL RLadies chapters involved.
 ---
-class: bg-main1 split-30 hide-slide-number
+# Object- Oriented Programming (OPP)
 
-.column.bg-main3[
-]
-.column.slide-in-right[
-.sliderbox.bg-main2.vmiddle[
-.font5[R6]
-]]
+- Small number of well understood objects.
+- God for building tools instead for analysing data.
+- Functions behaviour depends on the object.
+
+<br>
+--
+
+# There are 9 different packages for OPP
+
+- S3: Simple system good to start. We saw it last chapter
+- S4: Bioconductor. We will see it later
+- ReferenceClasses (RC).
+- R6: Kind of RC but simple way.
+
 ---
-class: split-two white
 
-.column.bg-white[.content[
-<img src="img/dog.png" width="100%">
+class: middle center bg-white
 
-]]
-
-.column.bg-main1[.content[.font2[### Object- Oriented Programming (OPP)]
-.font1[
-- ### Small number of well understood objects.
-- ### God for building tools instead to analysing data.
-- ### Functions behaves differently depends on the object.
-]
+<img src="img/logo.png" width="10%">
 
 --
-.font2[### There are different package for OPP]
-.font1[
-- ### S3: Simple system good to start.
-- ### S4: Bioconductor (encapsulation,inheretants).
-- ### ReferenceClasses (RC).
-- ### R6: Kind of RC but simple way.]
-]
+# Based on environments
 
-]
+--
+# Follows the OOP paradigm
 
+--
+# R6 objects are mutable.
+
+--
+<img src="img/R6class.png" width="40%" width="40%">
 
 
 ---
 
+class: middle center bg-white
 
+#Let's use R6 in a 
 
-
-
-
-### R6
-We keep working on the OOP (Object-Oriented Programming)
-We have talked about S3 and S4, but today we will talk about R6.
-
-object -> class-> method
-object -> what describe the object->functionality
-
-object: 20 types (logical vector,integer vector , list, environment) 
+<br>
+--
+<img src="img/toyfactory.jpeg" width="30%" width="30%">
 
 ---
-### When to used OOP
+# Defining a class "Toy"
+R6Class generates a class and the arguments
+```{r echo=TRUE, results='hide',message=F, warning=F}
+library(R6)
+Toy <- R6Class(
+  classname = "Toy",
+  public = list(
+                  #Attributes
+                    name = NA,
+                    phrase = NA,
+                  #Methods
+                    initialize = function(name = NA, phrase = NA) {
+                                          self$name <- name
+                                          self$phrase <- phrase
+                                          self$greet()},
+                    greet = function() {
+                            cat(paste0("Hello, my name is ", self$name, ". ",self$phrase,".\n"))
+                      }
+                ))
 
-Small number of objects well understanding objects
-Graphical user interphases
--God for building tools instead analyzing data (functional programming)
--Functions can behave differntly for different kind of objects.
+```
+---
+# Creating a new object of the Toy class
+<img src="img/woody.jpeg" width="10%" width="10%">
+--
+```{r echo=TRUE, eval=TRUE}
+woody <- Toy$new(name = "Woody",
+                 phrase = "There's a snake in my boot")
+```
+--
+<img src="img/buzz.jpeg" width="10%" width="10%">
+--
+```{r echo=TRUE, eval=TRUE}
+buzz <- Toy$new(name = "Buzz lightyear",
+                 phrase = "To infinity…and beyond!")
+```
 
 ---
-###There are different package for OPP
-There have been created 9 packages but now
--S3: Simple system good to start.
--S4: Bioconductor (encapsulation,inheretants).
--ReferenceClasses
--R6: Kind of RC but simple way
+# Reference Semantics
+```{r echo=TRUE, eval=TRUE}
+woody$name <- "Sheriff Woody Pride" 
+```
+--
+```{r echo=TRUE, eval=TRUE}
+woody$name
+```
+--
+Let’s create woody2 by assignment from woody:
+```{r echo=TRUE, eval=TRUE}
+woody2 <- woody
+
+```
+--
+Check their memory locations
+```{r echo=TRUE, eval=TRUE, message=F, warning=F}
+c(pryr::address(woody), pryr::address(woody2))
+```
 
 ---
-### Distinguish Variables
-class(matrix) "matrix"
-typeof(matrix) "float"
-
-mode()
-storage.mode()
-
-override the class but not typeof()
-class(X)<-"gato"
+What is the current name of woody?
+```{r echo=TRUE, eval=TRUE}
+woody$name
+```
+--
+Let's modify the woody2's name
+```{r echo=TRUE, eval=TRUE}
+woody2$name<-"Woody, the second"
+woody2$name
+```
+--
+What is the current name of woody?
+```{r echo=TRUE, eval=TRUE}
+woody$name
+```
 ---
-### Summary
-function overloading= input dependent function behaviour
-having different behaviours of function depending on the object
+#Now let's create woody 3 by cloning woody2
+
+```{r echo=TRUE, eval=TRUE}
+woody3 <- woody2$clone()
+```
+--
+Check their memory locations
+```{r echo=TRUE, eval=TRUE}
+c(pryr::address(woody), pryr::address(woody2),pryr::address(woody3))
+```
+--
+Modify the woody3's name
+```{r echo=TRUE, eval=TRUE}
+woody3$name<-"Woody, the third"
+woody3$name
+```
+--
+What is the current name of woody2?
+```{r echo=TRUE, eval=TRUE}
+woody2$name
+```
 ---
-### S3
-function split in generic and method
-methods are named generic.class
-print.Date
-method signatures contain generaric signature
-functin(x,...) elipsis argument
+# Inheritance
+The toy fabric wants to launch a new Toy version that sings!!
+```{r echo=TRUE, eval=TRUE}
+NewToy <- R6Class("NewToy",
+                  inherit = Toy,
+                  public = list(
+                                #Add a new attribute
+                                song = NA,
+                                
+                                #Modify method
+                                initialize = function(name = NA, phrase = NA, song= NA) {
+                                                      self$name <- name
+                                                      self$phrase <- phrase
+                                                      self$song <- song
+                                                      self$greet()},
+                                #Modify method
+                                greet = function() {
+                                         cat(paste0("Hello, my name is ", self$name, ". ",
+                                                    self$phrase,
+                                                    " and ", self$song, ".\n"))}
+                    ))
+
+```
+---
+```{r echo=TRUE, eval=TRUE}
+NewToy
+```
+--
+<img src="img/parent-child.png" width="30%" width="30%">
+
 
 ---
-### Method
-methods(class="glm") S3 and S4
-.S3mehtods(class="glm")
+# Keeps the Toy features
+<img src="img/trex.jpeg" width="10%" width="10%">
+```{r echo=TRUE, eval=TRUE}
+trex <- NewToy$new(name = "T-rex",
+                 phrase = "I don't like confrontations!",
+                 song = "You've got a friend in me!!!")
+
+```
+
+but with a new song!!
+--
+
+### Internally access to parents functions.
+super$greed()
+
+### For external use create a super function
+super_ = function() 
+          super
+          
+---
+# Adding attributes or methods after creating a generator
+
+Fabric wants to add a new attribute to track new additions to a toy
+--
+```{r echo=TRUE, eval=TRUE}
+NewToy$set("public", "addition",0)
+```  
+--
+A new function that updates the additions
+--
+```{r echo=TRUE, eval=TRUE}
+NewToy$set("public", "update_addition", function(x=0) {
+  self$addition <- self$addition + x 
+  invisible(self)
+}) 
+```  
+This returns the “current” object and makes it possible to chain together multiple method calls
+--
+```{r echo=FALSE, eval=TRUE}
+NewToy
+```
+---
+<img src="img/potato0.jpeg" width="10%" width="10%">
+```{r echo=TRUE, eval=TRUE}
+MrPotato <- NewToy$new(name = "Mr. Potato Head",
+                 phrase = "Where's my ear? Who's seen my ear?",
+                 song = "You've got a friend in me!!!")
+```  
+--
+```{r echo=TRUE, eval=TRUE}
+MrPotato$addition
+```
+--
+```{r echo=TRUE, eval=TRUE,warning=TRUE,error=TRUE}
+trex$addition
+```
+---
+#Method Chaining (like pipelines!!)
+<img src="img/potato.jpeg" width="40%" width="40%">
+
+--
+
+Add two angry eyes
+--
+```{r echo=TRUE, eval=TRUE}
+MrPotato$update_addition(2)$addition
+```
+Add one mustache, 10 monkeys, remove 2 monkeys that ran away.
+--
+```{r echo=TRUE, eval=TRUE}
+MrPotato$update_addition(1)$update_addition(10)$update_addition(-2)$addition
+```
 
 ---
-### Encapsulation
-separation
-separating implementton fromuser interfase
+# Controlling access
+### 1. Private: attributes and methods available only within the class
 
-apple_factory<- R6class{
-  "iphonex",
-  
-  store data implementation
-  private=list(
-           capacity=64GB
-           block_status=TRUE
-  ),
-  store methods ui
-  public=list(
-     unblock_cell=function{
-     private$block_status=FALSE
-     }
-            
-  )
-  
-  private$ to access private elemnents
-  ... and self$ to access public
-}
+Date of fabrication and a default status.
+```{r echo=TRUE, eval=TRUE}
+NewToy$set("private", "date",Sys.time())
+NewToy$set("private", "IsOn",FALSE)
+```  
+--
+Methods can have access to the private attributes as:
+```{r echo=TRUE, eval=TRUE}
+NewToy$set("public", "TurnOn", function() {
+  private$IsOn <-TRUE 
+}) 
+```    
+--
+```{r echo=TRUE, eval=TRUE}
+Jessie <- NewToy$new(name="Jessie",phrase="Yee-haw!",song="Yee-haw!")
+```  
+--
+```{r echo=TRUE, eval=TRUE}
+Jessie$date
+```
+---
+### 2. Active fields: provide access to any of the private attributes.
+These are functions that behave like variables.
+```{r echo=TRUE, eval=TRUE}
+NewToy$set("active","date_fabric_access",function() {
+      private$date})
+```
+--
+Lets create a Hamm toy
+```{r echo=TRUE, eval=TRUE}
+Hamm <- NewToy$new(name="Hamm",phrase="I am also Evil Dr. Porkchop!",song="You've got a friend in me!!")
+```  
+--
+Can we directly access the date?
+--
+```{r echo=TRUE, eval=TRUE}
+Hamm$date 
+```
+--
+But the toy fabric can do it..
+--
+```{r echo=TRUE, eval=TRUE}
+Hamm$date_fabric_access   # not a_thing$date_fabric_access()
+```
+---
+These functions can also be used to set values to private arguments but with additional checks.
+```{r echo=TRUE, eval=TRUE}
+# Create the private attribute
+NewToy$set("private", "ReferenceNumber",NA) 
+# Create a function to access the private reference value
+NewToy$set("active","ReferenceNumber_access",function() {
+  private$ReferenceNumber})
+# Create a function to set the private reference value
+NewToy$set("active", "set_ReferenceNumber_fabric", function(val=NA) {
+  if (is.na(val)|!is.numeric(val)) {
+    private$ReferenceNumber
+  }else{
+    private$ReferenceNumber <- val}})
+```
+--
+```{r echo=TRUE, eval=TRUE}
+Forky <- NewToy$new(name="Forky",phrase="I am trash!",song="You've got a friend in me!!")
+```  
+--
+```{r echo=TRUE, eval=TRUE}
+Forky$set_ReferenceNumber_fabric="AF44646"
+Forky$ReferenceNumber_access
+```
+--
+```{r echo=TRUE, eval=TRUE}
+Forky$set_ReferenceNumber_fabric=1234
+Forky$ReferenceNumber_access
+```
+---
+#Functions
+initialize()
+finalize()
+---
+# Exercises
+
+---
+
+# References
+Chang, Winston. 2019. R6: Encapsulated Classes with Reference Semantics. https://CRAN.R-project.org/package=R6.
 
 
-### Examples
+https://homerhanumat.github.io/r-notes/oo.html
+
+
+
+
