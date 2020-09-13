@@ -98,7 +98,7 @@ class: middle center bg-white
 # R6 objects are mutable.
 
 --
-<img src="img/R6class.png" width="40%" width="40%">
+<img src="img/R6class.png" width="60%" width="60%">
 
 
 ---
@@ -109,10 +109,10 @@ class: middle center bg-white
 
 <br>
 --
-<img src="img/toyfactory.jpeg" width="30%" width="30%">
+<img src="img/toyfactory.jpeg" width="40%" width="40%">
 
 ---
-# Defining a class "Toy"
+# Defining a class: "Toy class"
 R6Class generates a class and the arguments
 ```{r echo=TRUE, results='hide',message=F, warning=F}
 library(R6)
@@ -122,19 +122,23 @@ Toy <- R6Class(
                   #Attributes
                     name = NA,
                     phrase = NA,
+                    
                   #Methods
                     initialize = function(name = NA, phrase = NA) {
                                           self$name <- name
                                           self$phrase <- phrase
                                           self$greet()},
+                  
                     greet = function() {
                             cat(paste0("Hello, my name is ", self$name, ". ",self$phrase,".\n"))
                       }
-                ))
+                )
+  
+  )
 
 ```
 ---
-# Creating a new object of the Toy class
+# Creating a new object: object of "Toy class"
 <img src="img/woody.jpeg" width="10%" width="10%">
 --
 ```{r echo=TRUE, eval=TRUE}
@@ -150,7 +154,7 @@ buzz <- Toy$new(name = "Buzz lightyear",
 ```
 
 ---
-# Reference Semantics
+# Reference semantics
 ```{r echo=TRUE, eval=TRUE}
 woody$name <- "Sheriff Woody Pride" 
 ```
@@ -187,7 +191,7 @@ What is the current name of woody?
 woody$name
 ```
 ---
-#Now let's create woody 3 by cloning woody2
+# Cloning : now let's create woody 3 by cloning woody2
 
 ```{r echo=TRUE, eval=TRUE}
 woody3 <- woody2$clone()
@@ -195,7 +199,7 @@ woody3 <- woody2$clone()
 --
 Check their memory locations
 ```{r echo=TRUE, eval=TRUE}
-c(pryr::address(woody), pryr::address(woody2),pryr::address(woody3))
+c(pryr::address(woody2),pryr::address(woody3))
 ```
 --
 Modify the woody3's name
@@ -241,7 +245,7 @@ NewToy
 
 
 ---
-# Keeps the Toy features
+# Keeps the toy class features but with a new song!!
 <img src="img/trex.jpeg" width="10%" width="10%">
 ```{r echo=TRUE, eval=TRUE}
 trex <- NewToy$new(name = "T-rex",
@@ -249,27 +253,25 @@ trex <- NewToy$new(name = "T-rex",
                  song = "You've got a friend in me!!!")
 
 ```
-
-but with a new song!!
 --
 
-### Internally access to parents functions.
+### For internal access to parents functions:
 super$greed()
 
-### For external use create a super function
+### For external access, create a super_ function:
 super_ = function() 
           super
-          
+trex$super_()$greed()          
 ---
 # Adding attributes or methods after creating a generator
 
-Fabric wants to add a new attribute to track new additions to a toy
+The toy fabric wants to add a new attribute "additions" 
 --
 ```{r echo=TRUE, eval=TRUE}
 NewToy$set("public", "addition",0)
 ```  
 --
-A new function that updates the additions
+and also a new function that updates the "additions" attribute
 --
 ```{r echo=TRUE, eval=TRUE}
 NewToy$set("public", "update_addition", function(x=0) {
@@ -277,7 +279,7 @@ NewToy$set("public", "update_addition", function(x=0) {
   invisible(self)
 }) 
 ```  
-This returns the “current” object and makes it possible to chain together multiple method calls
+This returns the “current” object and makes it possible to chain together multiple method calls.
 --
 ```{r echo=FALSE, eval=TRUE}
 NewToy
@@ -298,7 +300,7 @@ MrPotato$addition
 trex$addition
 ```
 ---
-#Method Chaining (like pipelines!!)
+#Method chaining : like pipelines!!
 <img src="img/potato.jpeg" width="40%" width="40%">
 
 --
@@ -308,7 +310,7 @@ Add two angry eyes
 ```{r echo=TRUE, eval=TRUE}
 MrPotato$update_addition(2)$addition
 ```
-Add one mustache, 10 monkeys, remove 2 monkeys that ran away.
+Add one mustache, add 10 monkeys and remove 2 monkeys that ran away.
 --
 ```{r echo=TRUE, eval=TRUE}
 MrPotato$update_addition(1)$update_addition(10)$update_addition(-2)$addition
@@ -316,6 +318,9 @@ MrPotato$update_addition(1)$update_addition(10)$update_addition(-2)$addition
 
 ---
 # Controlling access
+
+<img src="img/control.png" width="60%" width="60%">
+---
 ### 1. Private: attributes and methods available only within the class
 
 Date of fabrication and a default status.

@@ -90,7 +90,7 @@ class: middle center bg-white
 # R6 objects are mutable.
 
 --
-&lt;img src="img/R6class.png" width="40%" width="40%"&gt;
+&lt;img src="img/R6class.png" width="60%" width="60%"&gt;
 
 
 ---
@@ -101,10 +101,10 @@ class: middle center bg-white
 
 &lt;br&gt;
 --
-&lt;img src="img/toyfactory.jpeg" width="30%" width="30%"&gt;
+&lt;img src="img/toyfactory.jpeg" width="40%" width="40%"&gt;
 
 ---
-# Defining a class "Toy"
+# Defining a class: "Toy class"
 R6Class generates a class and the arguments
 
 ```r
@@ -115,18 +115,22 @@ Toy &lt;- R6Class(
                   #Attributes
                     name = NA,
                     phrase = NA,
+                    
                   #Methods
                     initialize = function(name = NA, phrase = NA) {
                                           self$name &lt;- name
                                           self$phrase &lt;- phrase
                                           self$greet()},
+                  
                     greet = function() {
                             cat(paste0("Hello, my name is ", self$name, ". ",self$phrase,".\n"))
                       }
-                ))
+                )
+  
+  )
 ```
 ---
-# Creating a new object of the Toy class
+# Creating a new object: object of "Toy class"
 &lt;img src="img/woody.jpeg" width="10%" width="10%"&gt;
 --
 
@@ -152,7 +156,7 @@ buzz &lt;- Toy$new(name = "Buzz lightyear",
 ```
 
 ---
-# Reference Semantics
+# Reference semantics
 
 ```r
 woody$name &lt;- "Sheriff Woody Pride" 
@@ -180,7 +184,7 @@ c(pryr::address(woody), pryr::address(woody2))
 ```
 
 ```
-## [1] "0x7f9222dbca28" "0x7f9222dbca28"
+## [1] "0x7fa9188d3f08" "0x7fa9188d3f08"
 ```
 
 ---
@@ -215,7 +219,7 @@ woody$name
 ## [1] "Woody, the second"
 ```
 ---
-#Now let's create woody 3 by cloning woody2
+# Cloning : now let's create woody 3 by cloning woody2
 
 
 ```r
@@ -225,11 +229,11 @@ woody3 &lt;- woody2$clone()
 Check their memory locations
 
 ```r
-c(pryr::address(woody), pryr::address(woody2),pryr::address(woody3))
+c(pryr::address(woody2),pryr::address(woody3))
 ```
 
 ```
-## [1] "0x7f9222dbca28" "0x7f9222dbca28" "0x7f9222e64758"
+## [1] "0x7fa9188d3f08" "0x7fa918ab05e0"
 ```
 --
 Modify the woody3's name
@@ -300,7 +304,7 @@ NewToy
 
 
 ---
-# Keeps the Toy features
+# Keeps the toy class features but with a new song!!
 &lt;img src="img/trex.jpeg" width="10%" width="10%"&gt;
 
 ```r
@@ -312,28 +316,26 @@ trex &lt;- NewToy$new(name = "T-rex",
 ```
 ## Hello, my name is T-rex. I don't like confrontations! and You've got a friend in me!!!.
 ```
-
-but with a new song!!
 --
 
-### Internally access to parents functions.
+### For internal access to parents functions:
 super$greed()
 
-### For external use create a super function
+### For external access, create a super_ function:
 super_ = function() 
           super
-          
+trex$super_()$greed()          
 ---
 # Adding attributes or methods after creating a generator
 
-Fabric wants to add a new attribute to track new additions to a toy
+The toy fabric wants to add a new attribute "additions" 
 --
 
 ```r
 NewToy$set("public", "addition",0)
 ```
 --
-A new function that updates the additions
+and also a new function that updates the "additions" attribute
 --
 
 ```r
@@ -342,7 +344,7 @@ NewToy$set("public", "update_addition", function(x=0) {
   invisible(self)
 }) 
 ```
-This returns the “current” object and makes it possible to chain together multiple method calls
+This returns the “current” object and makes it possible to chain together multiple method calls.
 --
 
 ```
@@ -391,7 +393,7 @@ trex$addition
 ## NULL
 ```
 ---
-#Method Chaining (like pipelines!!)
+#Method chaining : like pipelines!!
 &lt;img src="img/potato.jpeg" width="40%" width="40%"&gt;
 
 --
@@ -406,7 +408,7 @@ MrPotato$update_addition(2)$addition
 ```
 ## [1] 2
 ```
-Add one mustache, 10 monkeys, remove 2 monkeys that ran away.
+Add one mustache, add 10 monkeys and remove 2 monkeys that ran away.
 --
 
 ```r
@@ -419,6 +421,9 @@ MrPotato$update_addition(1)$update_addition(10)$update_addition(-2)$addition
 
 ---
 # Controlling access
+
+&lt;img src="img/control.png" width="60%" width="60%"&gt;
+---
 ### 1. Private: attributes and methods available only within the class
 
 Date of fabrication and a default status.
@@ -438,7 +443,7 @@ NewToy$set("public", "TurnOn", function() {
 --
 
 ```r
-Jessy &lt;- NewToy$new(name="Jessie",phrase="Yee-haw!",song="Yee-haw!")
+Jessie &lt;- NewToy$new(name="Jessie",phrase="Yee-haw!",song="Yee-haw!")
 ```
 
 ```
@@ -447,7 +452,7 @@ Jessy &lt;- NewToy$new(name="Jessie",phrase="Yee-haw!",song="Yee-haw!")
 --
 
 ```r
-Jessy$date
+Jessie$date
 ```
 
 ```
@@ -491,7 +496,7 @@ Hamm$date_fabric_access   # not a_thing$date_fabric_access()
 ```
 
 ```
-## [1] "2020-09-13 20:24:19 CEST"
+## [1] "2020-09-13 21:53:34 CEST"
 ```
 ---
 These functions can also be used to set values to private arguments but with additional checks.
