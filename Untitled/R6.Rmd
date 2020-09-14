@@ -89,10 +89,10 @@ class: middle center bg-white
 <img src="img/logo.png" width="10%">
 
 --
-# Based on environments
+# Built on top of environments, it uses S3.
 
 --
-# Follows the OOP paradigm
+# Follows the OOP paradigm.
 
 --
 # R6 objects are mutable.
@@ -279,6 +279,7 @@ NewToy$set("public", "update_addition", function(x=0) {
   invisible(self)
 }) 
 ```  
+!!!Side-effect R6 methods should always return self invisibly!!!.
 This returns the “current” object and makes it possible to chain together multiple method calls.
 --
 ```{r echo=FALSE, eval=TRUE}
@@ -384,7 +385,7 @@ NewToy$set("active", "set_ReferenceNumber_fabric", function(val=NA) {
 ```
 --
 ```{r echo=TRUE, eval=TRUE}
-Forky <- NewToy$new(name="Forky",phrase="I am trash!",song="You've got a friend in me!!")
+Forky <- NewToy$new(name="Forky",phrase="I am not a toy,I am trash!",song="You've got a friend in me!!")
 ```  
 --
 ```{r echo=TRUE, eval=TRUE}
@@ -397,19 +398,178 @@ Forky$set_ReferenceNumber_fabric=1234
 Forky$ReferenceNumber_access
 ```
 ---
-#Functions
-initialize()
-finalize()
+# Additional functions
+
+### Print: overrides the print behaviour
+```{r echo=TRUE, eval=FALSE}
+ print = function(...) {
+    cat("Toy: \n")
+    cat("  Name: ", self$name, "\n", sep = "")
+    cat("  Phrase:  ", self$age, "\n", sep = "")
+    invisible(self)
+  }
+```
+### Finalize :
+```{r echo=TRUE, eval=FALSE}
+ finalize = function() {
+    message("Cleaning up ", self$name)
+    unlink(self$name)
+  }
+```
+
 ---
 # Exercises
 
+Q1 Create a bank account R6 class that stores a balance and allows you to deposit and withdraw money.
+--
+```{r echo=TRUE, eval=TRUE}
+BankAccount <- R6Class(
+  classname = "BankAccount",
+  public = list( #Attributes
+                 balance = 0,
+                 #Methods
+                 deposit = function(dep = 0) {
+                           self$balance = self$balance + dep
+                           invisible(self)},
+                withdraw = function(draw) {
+                           self$balance = self$balance - draw
+                           invisible(self)}
+  ))
+```
+--
+```{r echo=TRUE, eval=TRUE}
+my_account <- BankAccount$new()
+my_account$balance
+```
+--
+```{r echo=TRUE, eval=TRUE}
+my_account$deposit(5)$withdraw(15)$balance
+```
+---
+Create a subclass that throws an error if you attempt to go into overdraft.
+--
+```{r echo=TRUE, eval=TRUE}
+BankAccountStrict <- R6Class(
+  classname = "BankAccount",
+  inherit = BankAccount,
+  public = list(
+    withdraw = function(draw = 0) {
+      if (self$balance - draw < 0) {
+        stop("Your `withdraw` must be smaller ",
+             "than your `balance`.", call. = FALSE)
+      }
+      super$withdraw(draw = draw)
+    }
+  ))
+```
+--
+```{r echo=TRUE, eval=TRUE}
+my_strict_account <- BankAccountStrict$new()
+my_strict_account$balance
+```
+--
+```{r echo=TRUE, eval=TRUE,warning=TRUE,error=TRUE}
+my_strict_account$deposit(5)$withdraw(15)
+```
+--
+```{r echo=TRUE, eval=TRUE}
+my_strict_account$balance
+
+```
+
 ---
 
+---
+
+Q3 Why can not you model a bank account with an S3 class?
+
+--
+
+Because S3 classes obey the semantics of copy-on-modify. Therefore every time you deposites from the bank account, you would get a new copy of the object.
+
+---
+
+
+Q5: Create an R6 class that manages the current working directory.
+
+--
+
+```{r echo=TRUE, eval=TRUE}
+WorkingDirectory <- R6Class(
+  classname = "WorkingDirectory", 
+  public = list(
+    get = function() {
+      getwd()
+    },
+    set = function(value) {
+      setwd(value)
+    }
+  ))
+```
+
+--
+```{r echo=TRUE, eval=TRUE}
+my_wd<- WorkingDirectory$new()
+my_wd$get()  
+```
+
+--
+```{r echo=TRUE, eval=TRUE}
+my_wd$set("/Users/johannamunoz/Documents/GitHub/")
+my_wd$get() 
+```
+
+---
+
+Q6 Why can not you model the current working directory with an S3 class?
+
+--
+
+Because S3 classes are not suitable for modelling state that changes over time. S3 methods should (almost) always return the same result when called with the same inputs.
+
+---
+Q4: Can subclasses access private fields/methods from their parent? Perform an experiment to find out.
+--
+```{r echo=TRUE, eval=TRUE}
+A <- R6Class(
+  classname = "A",
+  private = list(
+    field = "foo",
+    method = function() {
+      "bar"
+    }
+  )
+)
+
+B <- R6Class(
+  classname = "B",
+  inherit = A,
+  public = list(
+    test = function() {
+      cat("Field:  ", super$field, "\n", sep = "")
+      cat("Method: ", super$method(), "\n", sep = "")
+    }
+  )
+)
+
+B$new()$test()
+```
+
+Subclasses can access private methods from their superclasses, but not private fields or attributes.  
+
+
+---
 # References
 Chang, Winston. 2019. R6: Encapsulated Classes with Reference Semantics. https://CRAN.R-project.org/package=R6.
 
+R6 online documentation at https://r6.r-lib.org.
 
-https://homerhanumat.github.io/r-notes/oo.html
+Great explanation:
+https://r6.r-lib.org/articles/Introduction.html
+
+Great examples: https://homerhanumat.github.io/r-notes/oo.html
+
+Solutions to book exercises: https://advanced-r-solutions.rbind.io/r6.html
 
 
 
