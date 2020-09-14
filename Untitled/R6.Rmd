@@ -401,6 +401,7 @@ Forky$ReferenceNumber_access
 # Additional functions
 
 ### Print: overrides the print behaviour
+
 ```{r echo=TRUE, eval=FALSE}
  print = function(...) {
     cat("Toy: \n")
@@ -409,7 +410,9 @@ Forky$ReferenceNumber_access
     invisible(self)
   }
 ```
+
 ### Finalize :
+
 ```{r echo=TRUE, eval=FALSE}
  finalize = function() {
     message("Cleaning up ", self$name)
@@ -420,8 +423,10 @@ Forky$ReferenceNumber_access
 ---
 # Exercises
 
-Q1 Create a bank account R6 class that stores a balance and allows you to deposit and withdraw money.
+## Q1: Create a bank account R6 class that stores a balance and allows you to deposit and withdraw money.
+
 --
+
 ```{r echo=TRUE, eval=TRUE}
 BankAccount <- R6Class(
   classname = "BankAccount",
@@ -436,17 +441,22 @@ BankAccount <- R6Class(
                            invisible(self)}
   ))
 ```
+
 --
+
 ```{r echo=TRUE, eval=TRUE}
 my_account <- BankAccount$new()
 my_account$balance
 ```
+
 --
+
 ```{r echo=TRUE, eval=TRUE}
 my_account$deposit(5)$withdraw(15)$balance
 ```
+
 ---
-Create a subclass that throws an error if you attempt to go into overdraft.
+## Now create a subclass that throws an error if you go into overdraft.
 --
 ```{r echo=TRUE, eval=TRUE}
 BankAccountStrict <- R6Class(
@@ -459,8 +469,7 @@ BankAccountStrict <- R6Class(
              "than your `balance`.", call. = FALSE)
       }
       super$withdraw(draw = draw)
-    }
-  ))
+    }))
 ```
 --
 ```{r echo=TRUE, eval=TRUE}
@@ -476,21 +485,18 @@ my_strict_account$deposit(5)$withdraw(15)
 my_strict_account$balance
 
 ```
-
 ---
 
----
-
-Q3 Why can not you model a bank account with an S3 class?
+## Q3 Why can not you model a bank account with an S3 class?
 
 --
 
-Because S3 classes obey the semantics of copy-on-modify. Therefore every time you deposites from the bank account, you would get a new copy of the object.
+Because S3 classes obey the semantics of copy-on-modify. 
+Therefore every time you make a transaction, you would get a new copy of the object.
 
 ---
 
-
-Q5: Create an R6 class that manages the current working directory.
+## Q5: Create an R6 class that manages the current working directory.
 
 --
 
@@ -508,12 +514,14 @@ WorkingDirectory <- R6Class(
 ```
 
 --
+
 ```{r echo=TRUE, eval=TRUE}
 my_wd<- WorkingDirectory$new()
 my_wd$get()  
 ```
 
 --
+
 ```{r echo=TRUE, eval=TRUE}
 my_wd$set("/Users/johannamunoz/Documents/GitHub/")
 my_wd$get() 
@@ -521,42 +529,42 @@ my_wd$get()
 
 ---
 
-Q6 Why can not you model the current working directory with an S3 class?
+## Q6 Why can not you model the current working directory with an S3 class?
 
 --
 
-Because S3 classes are not suitable for modelling state that changes over time. S3 methods should (almost) always return the same result when called with the same inputs.
+Because S3 classes are not suitable for modelling state that changes over time.
+S3 methods should (almost) always return the same result when called with the same inputs.
 
 ---
-Q4: Can subclasses access private fields/methods from their parent? Perform an experiment to find out.
+
+## Q4: Can subclasses access private fields/methods from their parent?
 --
 ```{r echo=TRUE, eval=TRUE}
-A <- R6Class(
-  classname = "A",
+ClassA <- R6Class(
+  classname = "ClassA",
   private = list(
-    field = "foo",
+    attribute = "data",
     method = function() {
-      "bar"
-    }
-  )
-)
+      "function output"
+    }))
 
-B <- R6Class(
-  classname = "B",
-  inherit = A,
+ClassB <- R6Class(
+  classname = "ClassB",
+  inherit = ClassA,
   public = list(
     test = function() {
-      cat("Field:  ", super$field, "\n", sep = "")
+      cat("Attribute:  ", super$attribute, "\n", sep = "")
       cat("Method: ", super$method(), "\n", sep = "")
     }
   )
 )
 
-B$new()$test()
+ClassB$new()$test()
 ```
+--
 
-Subclasses can access private methods from their superclasses, but not private fields or attributes.  
-
+Subclasses can access private methods from their superclasses, but not private attributes.  
 
 ---
 # References

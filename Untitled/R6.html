@@ -184,7 +184,7 @@ c(pryr::address(woody), pryr::address(woody2))
 ```
 
 ```
-## [1] "0x7fb848096578" "0x7fb848096578"
+## [1] "0x7f97c28954d0" "0x7f97c28954d0"
 ```
 
 ---
@@ -233,7 +233,7 @@ c(pryr::address(woody2),pryr::address(woody3))
 ```
 
 ```
-## [1] "0x7fb848096578" "0x7fb84809c930"
+## [1] "0x7f97c28954d0" "0x7f97c2897888"
 ```
 --
 Modify the woody3's name
@@ -497,7 +497,7 @@ Hamm$date_fabric_access   # not a_thing$date_fabric_access()
 ```
 
 ```
-## [1] "2020-09-14 00:16:36 CEST"
+## [1] "2020-09-14 10:03:26 CEST"
 ```
 ---
 These functions can also be used to set values to private arguments but with additional checks.
@@ -549,6 +549,7 @@ Forky$ReferenceNumber_access
 
 ### Print: overrides the print behaviour
 
+
 ```r
  print = function(...) {
     cat("Toy: \n")
@@ -557,7 +558,9 @@ Forky$ReferenceNumber_access
     invisible(self)
   }
 ```
+
 ### Finalize :
+
 
 ```r
  finalize = function() {
@@ -569,8 +572,10 @@ Forky$ReferenceNumber_access
 ---
 # Exercises
 
-Q1 Create a bank account R6 class that stores a balance and allows you to deposit and withdraw money.
+## Q1: Create a bank account R6 class that stores a balance and allows you to deposit and withdraw money.
+
 --
+
 
 ```r
 BankAccount &lt;- R6Class(
@@ -586,7 +591,9 @@ BankAccount &lt;- R6Class(
                            invisible(self)}
   ))
 ```
+
 --
+
 
 ```r
 my_account &lt;- BankAccount$new()
@@ -596,7 +603,9 @@ my_account$balance
 ```
 ## [1] 0
 ```
+
 --
+
 
 ```r
 my_account$deposit(5)$withdraw(15)$balance
@@ -605,8 +614,9 @@ my_account$deposit(5)$withdraw(15)$balance
 ```
 ## [1] -10
 ```
+
 ---
-Create a subclass that throws an error if you attempt to go into overdraft.
+## Now create a subclass that throws an error if you go into overdraft.
 --
 
 ```r
@@ -620,8 +630,7 @@ BankAccountStrict &lt;- R6Class(
              "than your `balance`.", call. = FALSE)
       }
       super$withdraw(draw = draw)
-    }
-  ))
+    }))
 ```
 --
 
@@ -651,21 +660,18 @@ my_strict_account$balance
 ```
 ## [1] 5
 ```
-
 ---
 
----
-
-Q3 Why can not you model a bank account with an S3 class?
+## Q3 Why can not you model a bank account with an S3 class?
 
 --
 
-Because S3 classes obey the semantics of copy-on-modify. Therefore every time you deposites from the bank account, you would get a new copy of the object.
+Because S3 classes obey the semantics of copy-on-modify. 
+Therefore every time you make a transaction, you would get a new copy of the object.
 
 ---
 
-
-Q5: Create an R6 class that manages the current working directory.
+## Q5: Create an R6 class that manages the current working directory.
 
 --
 
@@ -685,6 +691,7 @@ WorkingDirectory &lt;- R6Class(
 
 --
 
+
 ```r
 my_wd&lt;- WorkingDirectory$new()
 my_wd$get()  
@@ -695,6 +702,7 @@ my_wd$get()
 ```
 
 --
+
 
 ```r
 my_wd$set("/Users/johannamunoz/Documents/GitHub/")
@@ -707,48 +715,48 @@ my_wd$get()
 
 ---
 
-Q6 Why can not you model the current working directory with an S3 class?
+## Q6 Why can not you model the current working directory with an S3 class?
 
 --
 
-Because S3 classes are not suitable for modelling state that changes over time. S3 methods should (almost) always return the same result when called with the same inputs.
+Because S3 classes are not suitable for modelling state that changes over time.
+S3 methods should (almost) always return the same result when called with the same inputs.
 
 ---
-Q4: Can subclasses access private fields/methods from their parent? Perform an experiment to find out.
+
+## Q4: Can subclasses access private fields/methods from their parent?
 --
 
 ```r
-A &lt;- R6Class(
-  classname = "A",
+ClassA &lt;- R6Class(
+  classname = "ClassA",
   private = list(
-    field = "foo",
+    attribute = "data",
     method = function() {
-      "bar"
-    }
-  )
-)
+      "function output"
+    }))
 
-B &lt;- R6Class(
-  classname = "B",
-  inherit = A,
+ClassB &lt;- R6Class(
+  classname = "ClassB",
+  inherit = ClassA,
   public = list(
     test = function() {
-      cat("Field:  ", super$field, "\n", sep = "")
+      cat("Attribute:  ", super$attribute, "\n", sep = "")
       cat("Method: ", super$method(), "\n", sep = "")
     }
   )
 )
 
-B$new()$test()
+ClassB$new()$test()
 ```
 
 ```
-## Field:  
-## Method: bar
+## Attribute:  
+## Method: function output
 ```
+--
 
-Subclasses can access private methods from their superclasses, but not private fields or attributes.  
-
+Subclasses can access private methods from their superclasses, but not private attributes.  
 
 ---
 # References
