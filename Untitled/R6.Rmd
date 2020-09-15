@@ -68,8 +68,8 @@ We are going to rotate through every 2 weeks, with an event hosted by each of th
 ---
 # Object- Oriented Programming (OPP)
 
-- Small number of well understood objects.
 - God for building tools instead for analysing data.
+- Small number of well understood objects.
 - Functions behaviour depends on the object.
 
 <br>
@@ -77,10 +77,10 @@ We are going to rotate through every 2 weeks, with an event hosted by each of th
 
 # There are 9 different packages for OPP
 
-- S3: Simple system good to start. We saw it last chapter
-- S4: Bioconductor. We will see it later
+- S3: Simple system good to start. We saw it in the last chapter.
+- S4: We will see it in the next chapter.
 - ReferenceClasses (RC).
-- R6: Kind of RC but simple way.
+- R6: Kind of RC but simple.
 
 ---
 
@@ -176,6 +176,7 @@ c(pryr::address(woody), pryr::address(woody2))
 
 ---
 What is the current name of woody?
+--
 ```{r echo=TRUE, eval=TRUE}
 woody$name
 ```
@@ -187,6 +188,7 @@ woody2$name
 ```
 --
 What is the current name of woody?
+--
 ```{r echo=TRUE, eval=TRUE}
 woody$name
 ```
@@ -259,9 +261,11 @@ trex <- NewToy$new(name = "T-rex",
 super$greed()
 
 ### For external access, create a super_ function:
-super_ = function() 
+super\_ = function() 
           super
-trex$super_()$greed()          
+          
+          
+trex$super\_()$greed()          
 ---
 # Adding attributes or methods after creating a generator
 
@@ -330,7 +334,7 @@ NewToy$set("private", "date",Sys.time())
 NewToy$set("private", "IsOn",FALSE)
 ```  
 --
-Methods can have access to the private attributes as:
+Public methods can have access to the private attributes as:
 ```{r echo=TRUE, eval=TRUE}
 NewToy$set("public", "TurnOn", function() {
   private$IsOn <-TRUE 
@@ -366,7 +370,7 @@ Hamm$date
 But the toy fabric can do it..
 --
 ```{r echo=TRUE, eval=TRUE}
-Hamm$date_fabric_access   # not a_thing$date_fabric_access()
+Hamm$date_fabric_access   # not Hamm$date_fabric_access()
 ```
 ---
 These functions can also be used to set values to private arguments but with additional checks.
@@ -415,7 +419,7 @@ Forky$ReferenceNumber_access
 
 ```{r echo=TRUE, eval=FALSE}
  finalize = function() {
-    message("Cleaning up ", self$name)
+    message("Cleaning up ", self$ReferenceNumber)
     unlink(self$name)
   }
 ```

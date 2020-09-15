@@ -4,7 +4,7 @@
     <title>Advanced R Book Club: Chapter 14</title>
     <meta charset="utf-8" />
     <meta name="author" content="Johanna Munoz" />
-    <meta name="date" content="2020-09-14" />
+    <meta name="date" content="2020-09-15" />
     <link href="libs/remark-css/kunoichi.css" rel="stylesheet" />
     <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
     <link href="libs/remark-css/rladies-fonts.css" rel="stylesheet" />
@@ -16,7 +16,7 @@ class: center, middle, inverse, title-slide
 # Advanced R Book Club: Chapter 14
 ## R Ladies NL
 ### Johanna Munoz
-### 2020-09-14
+### 2020-09-15
 
 ---
 
@@ -60,8 +60,8 @@ We are going to rotate through every 2 weeks, with an event hosted by each of th
 ---
 # Object- Oriented Programming (OPP)
 
-- Small number of well understood objects.
 - God for building tools instead for analysing data.
+- Small number of well understood objects.
 - Functions behaviour depends on the object.
 
 &lt;br&gt;
@@ -69,10 +69,10 @@ We are going to rotate through every 2 weeks, with an event hosted by each of th
 
 # There are 9 different packages for OPP
 
-- S3: Simple system good to start. We saw it last chapter
-- S4: Bioconductor. We will see it later
+- S3: Simple system good to start. We saw it in the last chapter.
+- S4: We will see it in the next chapter.
 - ReferenceClasses (RC).
-- R6: Kind of RC but simple way.
+- R6: Kind of RC but simple.
 
 ---
 
@@ -184,11 +184,12 @@ c(pryr::address(woody), pryr::address(woody2))
 ```
 
 ```
-## [1] "0x7f97c28954d0" "0x7f97c28954d0"
+## [1] "0x7f94d096f910" "0x7f94d096f910"
 ```
 
 ---
 What is the current name of woody?
+--
 
 ```r
 woody$name
@@ -210,6 +211,7 @@ woody2$name
 ```
 --
 What is the current name of woody?
+--
 
 ```r
 woody$name
@@ -233,7 +235,7 @@ c(pryr::address(woody2),pryr::address(woody3))
 ```
 
 ```
-## [1] "0x7f97c28954d0" "0x7f97c2897888"
+## [1] "0x7f94d096f910" "0x7f94d096f7c0"
 ```
 --
 Modify the woody3's name
@@ -322,9 +324,11 @@ trex &lt;- NewToy$new(name = "T-rex",
 super$greed()
 
 ### For external access, create a super_ function:
-super_ = function() 
+super\_ = function() 
           super
-trex$super_()$greed()          
+          
+          
+trex$super\_()$greed()          
 ---
 # Adding attributes or methods after creating a generator
 
@@ -434,7 +438,7 @@ NewToy$set("private", "date",Sys.time())
 NewToy$set("private", "IsOn",FALSE)
 ```
 --
-Methods can have access to the private attributes as:
+Public methods can have access to the private attributes as:
 
 ```r
 NewToy$set("public", "TurnOn", function() {
@@ -493,11 +497,11 @@ But the toy fabric can do it..
 --
 
 ```r
-Hamm$date_fabric_access   # not a_thing$date_fabric_access()
+Hamm$date_fabric_access   # not Hamm$date_fabric_access()
 ```
 
 ```
-## [1] "2020-09-14 10:03:26 CEST"
+## [1] "2020-09-15 16:36:01 CEST"
 ```
 ---
 These functions can also be used to set values to private arguments but with additional checks.
@@ -564,7 +568,7 @@ Forky$ReferenceNumber_access
 
 ```r
  finalize = function() {
-    message("Cleaning up ", self$name)
+    message("Cleaning up ", self$ReferenceNumber)
     unlink(self$name)
   }
 ```
